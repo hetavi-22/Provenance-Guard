@@ -193,3 +193,22 @@ Below is a structured log sample fetched directly from `GET /log` containing mul
 2. **Flask Rate Limiting**: We asked the AI tool for rate limiting code template.
    * *AI Output*: Set up standard rate limits using local memory storage.
    * *Revision*: We changed the default port from `5000` to `5001` in the code because macOS uses port 5000 for AirPlay, which was causing socket conflicts.
+
+---
+
+## 12. Stretch Features: Analytics Dashboard (Option A)
+
+We built a responsive administrative and grader dashboard available at `GET /dashboard`.
+
+### Implementation Details:
+* **Route**: `/dashboard`
+* **Aesthetics & UX**: A glassmorphic dark-mode web page featuring:
+  * **Summary Indicators**: Four summary cards displaying:
+    1. *Total Submissions* analyzed.
+    2. *Average System Confidence* (calibrated combined percentage).
+    3. *Appeals Lodged* by creators.
+    4. *Appeal Rate* (percentage of submissions that have been appealed).
+  * **Distribution Visualization**: A CSS-styled horizontal stacked bar indicating the ratio of Likely Human (Emerald Green), Uncertain (Amber Yellow), and Likely AI (Rose Red) detections.
+  * **Attribution Log**: A tabular log displaying the last 15 submissions with Creator ID, Timestamp, Verdict badges, and Fused/Component Scores.
+  * **Appeal Integration**: For any submission that has been appealed (`status == "under_review"`), the creator's written reasoning is displayed inside a blue callout bubble right below the text snippet for administrative transparency.
+

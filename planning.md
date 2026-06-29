@@ -155,3 +155,17 @@ graph TD
   * Flask-Limiter integration with memory storage.
   * Full transparency label formatting logic.
 * **Verification Approach:** Submit a sample, obtain a `content_id`, call `/appeal` with that ID, and run `GET /log` to verify status is `under_review`. Run an automated bash loop to send 12 requests quickly to ensure rate limiting correctly blocks with `429 Too Many Requests`.
+
+---
+
+## 8. Stretch Features
+
+### Analytics Dashboard (Option A)
+* **Goal**: Build a visual view showing detection patterns, appeal rates, and key metadata.
+* **Implementation**:
+  * Route: `GET /dashboard`
+  * Frontend: A beautifully designed responsive HTML view featuring:
+    * Stats counters: Total submissions, average confidence percentage, total appeals lodged, and the appeal rate.
+    * Visual distribution bar: A CSS-styled horizontal bar segment representing the proportion of Likely Human, Uncertain, and Likely AI detections in HSL/neon shades (Emerald, Amber, and Rose).
+    * Recent Log: A table displaying the last 15 entries containing timestamp, creator, raw text snippet, combined score vs. individual signal breakdowns, attribution badge, and an expanding container showcasing the appeal reasoning if the content is `'under_review'`.
+

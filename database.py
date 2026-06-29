@@ -71,3 +71,48 @@ def get_all_submissions(limit=50):
     rows = cursor.fetchall()
     conn.close()
     return [dict(row) for row in rows]
+
+def get_analytics_stats():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Total submissions
+    cursor.execute("SELECT COUNT(*) FROM submissions")
+    total = cursor.fetchone()[0]
+    
+    if total == 0:
+        conn.close()
+        return {
+            "total_submissions": 0,
+            "likely_human": 0,
+            "likely_ai": 0,
+            "uncertain": 0,
+            "total_appeals": 0,
+            "appeal_rate": 0.0,
+            "avg_confidence": 0.0
+        }
+        
+    # Attribution breakdown
+    cursor.execute("SELECT attribution, COUNT(*) FROM submissions GROUP BY attribution")
+    breakdown = {row[0]: row[1] for row in cursor.fetchall()}
+    
+    # Total appeals (status = 'under_review' or having appeal reasoning)
+    cursor.execute("SELECT COUNT(*) FROM submissions WHERE status = 'under_review'")
+    appeals = cursor.fetchone()[0]
+    
+    # Average combined confidence
+    cursor.execute("SELECT AVG(combined_confidence) FROM submissions")
+    avg_confidence = cursor.fetchone()[0]
+    
+    conn.close()
+    
+    return {
+        "total_submissions": total,
+        "likely_human": breakdown.get("likely_human", 0),
+        "likely_ai": breakdown.get("likely_ai", 0),
+        "uncertain": breakdown.get("uncertain", 0),
+        "total_appeals": appeals,
+        "appeal_rate": round((appeals / total) * 100, 1),
+        "avg_confidence": round(avg_confidence or 0.0, 2)
+    }
+
